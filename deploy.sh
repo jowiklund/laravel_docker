@@ -9,17 +9,17 @@ fi
 
 clear
 echo "Setting up ${PROJECT_NAME}"
-sleep 1
+sleep 1	
 clear
 
-echo "Creating source folder"
-mkdir src
-
+echo "Setting up apache"
 bash ./bin/apache-setup.sh
 
 echo "Creating docker containers"
 docker-compose up -d --build
 
 echo "Setting up laravel"
-docker exec ${PROJECT_NAME}-php-apache composer create-project laravel/laravel .
+docker exec ${PROJECT_NAME}-php-apache composer install
 docker exec ${PROJECT_NAME}-php-apache chmod -R 777 ./storage
+docker exec ${PROJECT_NAME}-php-apache mv .env.example .env
+docker exec ${PROJECT_NAME}-php-apache php artisan key:generate
